@@ -1,12 +1,26 @@
 {
   "name": "getx-light-bulb",
   "displayName": "GetX Light Bulb",
-  "description": "CMD + . to show shortcut to wrap body",
+  "description": "CMD + . to show shortcut to wrap body for Getx",
   "version": "0.0.1",
+  "publisher": "HyLun",
+  "author": "HyLun",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haolun1996/GetX-Light-Bulb.git"
+  },
+  "keywords": [
+    "dart",
+    "flutter",
+    "get",
+    "getX",
+    "state-management"
+  ],
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": [
+    "Programming Languages",
     "Other"
   ],
   "activationEvents": [
@@ -17,7 +31,17 @@
     "commands": [
       {
         "command": "getx-light-bulb.wrapObx",
-        "title": "GetX Obx Wrap"
+        "title": "GetX Obx Wrap",
+        "category": "Dart"
+      }
+    ]
+  },
+  "menus": {
+    "explorer/context": [],
+    "commandPalette": [
+      {
+        "command": "getx-light-bulb.wrapObx",
+        "when": "editorLangId == dart"
       }
     ]
   },
