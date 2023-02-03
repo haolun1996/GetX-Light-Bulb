@@ -11,5 +11,5 @@ A vscode extension for [Get](https://pub.dev/packages/get) to make your developm
 Initial release of GetX Light Bulb 
 - Wrap code body for Obx(() => ...)
 
-### 0.0.2
+### 0.1.0
 - Remove Obx(() => ...)
