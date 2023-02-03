@@ -41,6 +41,11 @@
         "command": "getx-light-bulb.wrapObx",
         "title": "GetX Obx Wrap",
         "category": "Dart"
+      },
+      {
+        "command": "getx-light-bulb.removeObx",
+        "title": "Remove this Obx",
+        "category": "Dart"
       }
     ]
   },

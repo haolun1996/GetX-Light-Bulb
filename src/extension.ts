@@ -11,16 +11,14 @@ export function activate(context: vscode.ExtensionContext) {
 		new CodeActionProvider()
 	);
 
-
 	let wrapObx = vscode.commands.registerCommand('getx-light-bulb.wrapObx', () => {
 		insertSnippet("Obx(() =>" + " ", ")", SpaceX(), true, true);
-		vscode.window.setStatusBarMessage("Wrap Successfully Created", 2000);
+		vscode.window.setStatusBarMessage("Wrap Obx()", 2000);
 	});
 
 	let removeObx = vscode.commands.registerCommand('getx-light-bulb.removeObx', () => {
 		removeObxSnippet();
-
-		vscode.window.setStatusBarMessage("Wrap Successfully Created", 2000);
+		vscode.window.setStatusBarMessage("Removed Obx()", 2000);
 	});
 
 	context.subscriptions.push(lightBulb);
