@@ -14,38 +14,35 @@ export function insertSnippet(
 
         const selectedText = selected(editorX);
 
-        var sonny = editorX.document.getText(selectedText);
+        var middble = editorX.document.getText(selectedText);
 
         if (substitute) {
-            if (sonny.substr(-1) === ",") {
-                sonny = sonny.substr(0, sonny.length - 1);
-                sonny += "";
+            if (middble.substr(-1) === ",") {
+                middble = middble.substr(0, middble.length - 1);
+                middble += "";
+            }
+        } else {
+            if (middble.substr(-1) === ",") {
+                middble = middble.substr(0, middble.length - 1);
+                middble += ";";
             }
         }
-        else {
-            if (sonny.substr(-1) === ",") {
-                sonny = sonny.substr(0, sonny.length - 1);
-                sonny += ";";
-            }
-        }
-        var replaceSonny = previously + sonny + behind;
-        if (
-            sonny.substr(-1) === "," ||
-            (sonny.substr(-1) === ";" && substitute)
-        ) {
+
+        var result = previously + middble + behind;
+
+        if (middble.substr(-1) === "," || (middble.substr(-1) === ";" && substitute)) {
 
             if (obx) {
-                replaceSonny += ";";
+                result += ";";
             } else {
-                replaceSonny += ",";
+                result += ",";
             }
 
         }
-        editorX.insertSnippet(new vscode.SnippetString(replaceSonny), selectedText);
 
-        vscode.commands.executeCommand(
-            "editor.action.formatDocument"
-        );
+        editorX.insertSnippet(new vscode.SnippetString(result), selectedText);
+
+        vscode.commands.executeCommand("editor.action.formatDocument");
     }
 
 

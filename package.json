@@ -14,17 +14,25 @@
     "flutter",
     "get",
     "getX",
-    "state-management"
+    "state-management",
+    "Obx",
+    "Shortcut"
   ],
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": [
     "Programming Languages",
+    "Formatters",
     "Other"
   ],
   "activationEvents": [
-    "onCommand:getx-light-bulb.wrapObx"
+    "workspaceContains:pubspec.yaml",
+    "workspaceContains:*/pubspec.yaml",
+    "workspaceContains:*/*/pubspec.yaml",
+    "workspaceContains:*.dart",
+    "workspaceContains:*/*.dart",
+    "workspaceContains:*/*/*.dart"
   ],
   "main": "./out/extension.js",
   "contributes": {
