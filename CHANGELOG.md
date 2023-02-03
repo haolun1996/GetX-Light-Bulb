@@ -1,9 +1,9 @@
 # Change Log
 
-All notable changes to the "getx-light-bulb" extension will be documented in this file.
+## [v0.1.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.1.0) - 2018-02-03
+- Remove function Obx(() => ...)
+- Full released on v0.1.0 with Wrap OR remove GetX Obx(() => ...)
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+## [v0.0.1] - 2023-02-02
+- Initial release of GetX Light Bulb 
+  - Wrap function to code body for Obx(() => ...)
