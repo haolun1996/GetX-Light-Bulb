@@ -4,10 +4,12 @@ A vscode extension for [Get](https://pub.dev/packages/get) to make your developm
 
 #### Download extension on [MarketPlace](https://marketplace.visualstudio.com/items?itemName=HyLun.getx-light-bulb)
 
-
 ## Release Notes
 
-### 0.0.1-dev
+### 0.0.1
 
 Initial release of GetX Light Bulb 
-- Wrap code body for Obx(()=> ...)
+- Wrap code body for Obx(() => ...)
+
+### 0.0.2
+- Remove Obx(() => ...)
