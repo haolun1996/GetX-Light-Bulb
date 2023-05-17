@@ -1,0 +1,51 @@
+{
+    "TextEditingController": {
+        "prefix": "text-editing-controller",
+        "body": [
+            "final TextEditingController$1 $2Controller = TextEditingController();"
+        ],
+        "description": "Create TextEditingController"
+    },
+    "RxBool": {
+        "prefix": "~boolrx",
+        "body": [
+            "RxBool is$1 = false$2.obs;"
+        ],
+        "description": "Create GetX RxBool"
+    },
+    "Bool": {
+        "prefix": "~bool",
+        "body": [
+            "bool$1 is$2 = false$3;"
+        ],
+        "description": "Create Bool"
+    },
+    "RxString": {
+        "prefix": "~stringrx",
+        "body": [
+            "RxString $1 = ''$2.obs;"
+        ],
+        "description": "Create GetX RxString"
+    },
+    "String": {
+        "prefix": "~string",
+        "body": [
+            "String $1 = ''$2;"
+        ],
+        "description": "Create String"
+    },
+    "RxInt": {
+        "prefix": "~intrx",
+        "body": [
+            "RxInt $1 = 0$2.obs;"
+        ],
+        "description": "Create GetX RxInt"
+    },
+    "Int": {
+        "prefix": "~string",
+        "body": [
+            "int $1 = 0$2;"
+        ],
+        "description": "Create Int"
+    }
+}

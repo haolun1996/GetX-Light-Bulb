@@ -1,29 +1,39 @@
-import * as vscode from 'vscode';
+import { languages, commands, window, ExtensionContext } from 'vscode';
 import { CodeActionProvider } from './utils/code_action';
-import { insertSnippet } from './utils/insert';
-import { removeObxSnippet } from './utils/remove';
-import { SpaceX } from './utils/space';
+import { wrapWithObx, removeThisObx, getXCreateFile } from './commands/getx';
+import { expanded } from './commands/flutter';
 
-export function activate(context: vscode.ExtensionContext) {
-	// vscode.window.showInformationMessage('Hello World from GetX Light Bulb!');
-	let lightBulb = vscode.languages.registerCodeActionsProvider(
+
+
+export function activate(context: ExtensionContext) {
+	// window.showInformationMessage('Hello World from GetX Light Bulb!');
+	let lightBulb = languages.registerCodeActionsProvider(
 		{ pattern: "**/*.{dart}", scheme: "file" },
 		new CodeActionProvider()
 	);
 
-	let wrapObx = vscode.commands.registerCommand('getx-light-bulb.wrapObx', () => {
-		insertSnippet("Obx(() =>" + " ", ")", SpaceX(), true, true);
-		vscode.window.setStatusBarMessage("Wrap Obx()", 2000);
+	let wrapObx = commands.registerCommand('getx-light-bulb.wrapObx', () => {
+		wrapWithObx();
+		window.setStatusBarMessage("Wrap Successful", 2000);
 	});
 
-	let removeObx = vscode.commands.registerCommand('getx-light-bulb.removeObx', () => {
-		removeObxSnippet();
-		vscode.window.setStatusBarMessage("Removed Obx()", 2000);
+	let removeObx = commands.registerCommand('getx-light-bulb.removeObx', () => {
+		removeThisObx();
+		window.setStatusBarMessage("Removed Successful", 2000);
 	});
+
+	let expand = commands.registerCommand('getx-light-bulb.expanded', () => {
+		expanded();
+		window.setStatusBarMessage("Expanded", 2000);
+	});
+
+	let getxfeature = commands.registerCommand("getx-light-bulb.getXCreateFile", getXCreateFile);
 
 	context.subscriptions.push(lightBulb);
+	context.subscriptions.push(expand);
 	context.subscriptions.push(wrapObx);
 	context.subscriptions.push(removeObx);
+	context.subscriptions.push(getxfeature);
 }
 
 // This method is called when your extension is deactivated
