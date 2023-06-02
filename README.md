@@ -23,7 +23,15 @@ __** Wrap or remove Obx function need to highlight on a completed widget **__
 
 ***
 
-<br />  
+<br />
+
+### Create BaseX page with binding and controller
+![demo](https://raw.githubusercontent.com/haolun1996/GetX-Light-Bulb/main/example/gif/create-base-x-page.gif)
+
+<br />
+
+***
+<br />
 
 ## Where can I get it?
 Download extension on [MarketPlace](https://marketplace.visualstudio.com/items?itemName=HyLun.getx-light-bulb)

@@ -1,12 +1,16 @@
 # Change Log
 
+## [v0.3.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.0) - 2023-06-02
+- New
+  - Create baseX page with binding and controller with right click on folder
+- Fixes
+  - Wrap with Obx cant handle for many return
+- Rename
+  - CodeActionProvider to LighBulbProvider
+
 ## [v0.2.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.2.0) - 2023-05-17
 - Restructure wrap and remove Obx by using highlight selected method
 - Full released on v0.2.0 with Restructured Wrap And remove GetX Obx(() => ...)
-
-## [v0.1.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.1.0) - 2023-02-03
-- Remove function Obx(() => ...)
-- Full released on v0.1.0 with Wrap OR remove GetX Obx(() => ...)
 
 ## [v0.1.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.1.0) - 2023-02-03
 - Remove function Obx(() => ...)
