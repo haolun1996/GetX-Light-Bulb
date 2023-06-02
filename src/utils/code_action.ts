@@ -1,9 +1,9 @@
 
-import * as vscode from "vscode";
+import { CodeActionProvider, Command, window, } from "vscode";
 
-export class CodeActionProvider implements vscode.CodeActionProvider {
-    public provideCodeActions(): vscode.Command[] {
-        const editorX = vscode.window.activeTextEditor;
+export class LighBulbProvider implements CodeActionProvider {
+    public provideCodeActions(): Command[] {
+        const editorX = window.activeTextEditor;
 
         if (!editorX) {
             return [];

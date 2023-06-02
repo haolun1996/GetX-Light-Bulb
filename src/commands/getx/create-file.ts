@@ -1,13 +1,19 @@
-import { window, Uri } from "vscode";
+import { window, Uri, workspace, ProgressLocation } from "vscode";
 import { mkdirp } from "mkdirp";
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { createFile } from "../create_file";
+import { showErrorMessageWithTimeout } from "../../utils/show_prompt";
 const { snakeCase, camelCase, startCase } = require('lodash');
-// const { wrapWithProviderConsumerBuilder, wrapWithValueListenableBuilder, wrapWithMobXObserverBuilder } = require('../commands/wrap-with');
 
 export async function getXCreateFile(uri: Uri) {
+    if (!uri.fsPath.includes('ui')) {
+        return showErrorMessageWithTimeout('Please create inside ui folder.', 4);
+    }
+
     const featureName = await promptForFeatureName("New Folder Name");
     if (featureName) {
+        const packageName = await getPackageName();
+
         const snake = `${snakeCase(`${featureName}`)}`;
         const camel = `${camelCase(`${featureName}`)}`;
 
@@ -21,40 +27,61 @@ export async function getXCreateFile(uri: Uri) {
         await createFile(bindings);
         await createFile(controller);
 
-        const pageNameFile = startCase(`${camel}Page`);
-        const bindingNameFile = startCase(`${camel}Bindings`);
-        const controllerNameFile = startCase(`${camel}Controller`);
+        const pageNameFile = `${startCase(camel)}Page`;
+        const bindingNameFile = `${startCase(camel)}Bindings`;
+        const controllerNameFile = `${startCase(camel)}Controller`;
 
-        writeFileSync(page, `import 'package:get/get.dart';
-        import 'package:flutter/material.dart';
-        import './${featureName}_controller.dart';
 
-        class ${pageNameFile} extends GetView < ${controllerNameFile}> {
+        writeFileSync(page,
+            `import 'package:flutter/material.dart';
 
-            const ${pageNameFile} ({ Key? key }) : super(key: key);
+import 'package:baseX/Core/base_x.dart';
 
-        @override
-    Widget build(BuildContext context) {
-            return Scaffold(
-                appBar: AppBar(title: const Text('${pageNameFile}'),),
-            body: Container(),
-        );
-        }
-    } `, 'utf8');
+import 'package:${packageName}/app/ui/${snake}/${snake}_controller.dart';
 
-        writeFileSync(bindings, `import 'package:get/get.dart';
-    import './${featureName}_controller.dart';
+class ${pageNameFile} extends BaseXWidget<${controllerNameFile}> {
 
-    class ${bindingNameFile} implements Bindings {
-        @override
-        void dependencies() {
-            Get.put(${controllerNameFile}());
-        }
-    } `, 'utf8');
+    @override
+    String get routeName => '/${snake}';
 
-        writeFileSync(controller, `import 'package:get/get.dart';
+    @override
+    Widget? appBar(BuildContext context) => null;
 
-    class $ { controllerNameFile } extends GetxController { } `, 'utf8');
+    @override
+    Widget body(BuildContext context) {
+        return Column(children: []);
+    }
+            
+}`, 'utf8');
+
+        writeFileSync(bindings,
+            `import 'package:get/get.dart';
+import 'package:${packageName}/app/ui/${snake}/${snake}_controller.dart';
+
+class ${bindingNameFile} implements Bindings {
+    @override
+    void dependencies() {
+        Get.put(${controllerNameFile}());
+    }
+}`, 'utf8');
+
+        writeFileSync(controller,
+            `import 'package:baseX/Core/base_x_controller.dart';
+
+class ${controllerNameFile} extends BaseXController { 
+
+    @override
+    void onInit() {
+        // TODO: implement onInit
+        super.onInit();
+    }
+
+    @override
+    void onClose() {
+        // TODO: implement onClose
+        super.onClose();
+    }
+}`, 'utf8');
 
         window.showInformationMessage('BaseX page created');
     }
@@ -68,53 +95,12 @@ function promptForFeatureName(prompt: string) {
     return window.showInputBox(FeatureNamePromptOptions);
 }
 
+async function getPackageName() {
+    let pubspecFile = await workspace.findFiles('pubspec.yaml');
+    let pubspecPath = pubspecFile[0].path;
 
+    var data = readFileSync(pubspecPath, 'utf-8')
+    var nameLine = data.split('\n')[0].replace("name: ", "");
 
-// vscode.commands.registerCommand("extension.getxfeature", async function (uri) {
-//     const featureName = await promptForFeatureName("Feature GetX Name");
-//     if (featureName) {
-//         mkdirp(uri.fsPath + '/' + featureName);
-//         const baseUrl = uri.fsPath + '/' + featureName
-//         const page = `${ baseUrl } /${featureName}_page.dart`;
-//         const bindings = `${baseUrl}/${featureName}_bindings.dart`;
-//         const controller = `${baseUrl}/${featureName}_controller.dart`;
-
-//         await createFile(page);
-//         await createFile(bindings);
-//         await createFile(controller);
-
-//         const pageNameFile = _.upperFirst(_.camelCase(`${featureName}Page`));
-//         const bindingNameFile = _.upperFirst(_.camelCase(`${featureName}Bindings`));
-//         const controllerNameFile = _.upperFirst(_.camelCase(`${featureName}Controller`));
-
-//         fs.writeFileSync(page, `import 'package:get/get.dart';
-// import 'package:flutter/material.dart';
-// import './${featureName}_controller.dart';
-
-// class ${pageNameFile} extends GetView<${controllerNameFile}> {
-// @override
-// Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(title: Text('${pageNameFile}'),),
-//         body: Container(),
-//     );
-// }
-// }`, 'utf8');
-
-//         fs.writeFileSync(bindings, `import 'package:get/get.dart';
-// import './${featureName}_controller.dart';
-
-// class ${bindingNameFile} implements Bindings {
-// @override
-// void dependencies() {
-//     Get.put(${controllerNameFile}());
-// }
-// }`, 'utf8');
-
-//         fs.writeFileSync(controller, `import 'package:get/get.dart';
-
-// class ${controllerNameFile} extends GetxController {}`, 'utf8');
-
-//         vscode.window.showInformationMessage('GetX new feature created');
-//     }
-// });
+    return nameLine;
+}

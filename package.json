@@ -2,7 +2,7 @@
   "name": "getx-light-bulb",
   "displayName": "GetX Light Bulb",
   "description": "CMD + . to show shortcut to wrap body for Getx",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "HyLun",
   "author": "HyLun",
   "repository": {
@@ -65,15 +65,11 @@
       }
     ],
     "menus": {
-      "_comment": [
+      "explorer/context": [
         {
-          "explorer/context": [
-            {
-              "when": "explorerResourceIsFolder",
-              "command": "getx-light-bulb.getXCreateFile",
-              "group": "1_basex@1"
-            }
-          ]
+          "when": "explorerResourceIsFolder",
+          "command": "getx-light-bulb.getXCreateFile",
+          "group": "1_basex@1"
         }
       ],
       "commandPalette": [
