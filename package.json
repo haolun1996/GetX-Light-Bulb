@@ -2,9 +2,10 @@
   "name": "getx-light-bulb",
   "displayName": "GetX Light Bulb",
   "description": "CMD + . to show shortcut to wrap body for Getx",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "HyLun",
   "author": "HyLun",
+  "icon": "light-bulb.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/haolun1996/GetX-Light-Bulb.git"
