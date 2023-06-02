@@ -3,7 +3,7 @@ import { mkdirp } from "mkdirp";
 import { writeFileSync, readFileSync } from "fs";
 import { createFile } from "../create_file";
 import { showErrorMessageWithTimeout } from "../../utils/show_prompt";
-const { snakeCase, camelCase, startCase } = require('lodash');
+const { snakeCase, camelCase, upperFirst } = require('lodash');
 
 export async function getXCreateFile(uri: Uri) {
     if (!uri.fsPath.includes('ui')) {
@@ -12,7 +12,8 @@ export async function getXCreateFile(uri: Uri) {
 
     const featureName = await promptForFeatureName("New Folder Name");
     if (featureName) {
-        const packageName = await getPackageName();
+        const middlePath = uri.path.replaceAll(workspace.workspaceFolders![0].uri.path, '').replaceAll('/lib', '');
+        const packageName = `${await getPackageName()}${middlePath}`;
 
         const snake = `${snakeCase(`${featureName}`)}`;
         const camel = `${camelCase(`${featureName}`)}`;
@@ -27,17 +28,16 @@ export async function getXCreateFile(uri: Uri) {
         await createFile(bindings);
         await createFile(controller);
 
-        const pageNameFile = `${startCase(camel)}Page`;
-        const bindingNameFile = `${startCase(camel)}Bindings`;
-        const controllerNameFile = `${startCase(camel)}Controller`;
-
+        const pageNameFile = `${upperFirst(camel)}Page`;
+        const bindingNameFile = `${upperFirst(camel)}Bindings`;
+        const controllerNameFile = `${upperFirst(camel)}Controller`;
 
         writeFileSync(page,
             `import 'package:flutter/material.dart';
 
-import 'package:baseX/Core/base_x.dart';
+import 'package:baseX/Core/x_base_widget.dart';
 
-import 'package:${packageName}/app/ui/${snake}/${snake}_controller.dart';
+import 'package:${packageName}/${snake}/${snake}_controller.dart';
 
 class ${pageNameFile} extends BaseXWidget<${controllerNameFile}> {
 
@@ -56,7 +56,7 @@ class ${pageNameFile} extends BaseXWidget<${controllerNameFile}> {
 
         writeFileSync(bindings,
             `import 'package:get/get.dart';
-import 'package:${packageName}/app/ui/${snake}/${snake}_controller.dart';
+import 'package:${packageName}/${snake}/${snake}_controller.dart';
 
 class ${bindingNameFile} implements Bindings {
     @override
@@ -66,7 +66,7 @@ class ${bindingNameFile} implements Bindings {
 }`, 'utf8');
 
         writeFileSync(controller,
-            `import 'package:baseX/Core/base_x_controller.dart';
+            `import 'package:baseX/Core/x_base_controller.dart';
 
 class ${controllerNameFile} extends BaseXController { 
 
