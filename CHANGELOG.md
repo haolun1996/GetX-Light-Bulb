@@ -1,5 +1,13 @@
 # Change Log
 
+## [v0.3.2](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.2) - 2023-06-02
+- Fixes
+  - change startCase to upperFirst due to startCase will cause space in between
+  - nested path didn't work properly
+  - update import hardcode
+
+- Thanks to [Jean Yap](https://github.com/yin3797) reported issues above
+
 ## [v0.3.1](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.1) - 2023-06-02
 - Add icon of vscode extension
 
