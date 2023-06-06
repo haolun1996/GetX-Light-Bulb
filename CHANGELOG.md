@@ -1,5 +1,15 @@
 # Change Log
 
+## [v0.3.3](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.3) - 2023-06-06
+- add 
+  - icon to getXCreateFile
+  - removeObx/ expanded to command palette
+- hide getXCreateFile show on command palette
+- rename and remove console.log
+
+- EXTRA
+  - add version and maintained logo to readme
+
 ## [v0.3.2](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.2) - 2023-06-02
 - Fixes
   - change startCase to upperFirst due to startCase will cause space in between
