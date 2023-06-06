@@ -2,7 +2,7 @@
   "name": "getx-light-bulb",
   "displayName": "GetX Light Bulb",
   "description": "CMD + . to show shortcut to wrap body for Getx",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "publisher": "HyLun",
   "author": "HyLun",
   "icon": "light-bulb.png",
@@ -40,7 +40,7 @@
     "commands": [
       {
         "command": "getx-light-bulb.wrapObx",
-        "title": "GetX Obx Wrap",
+        "title": "Wrap Obx",
         "category": "BaseX"
       },
       {
@@ -55,7 +55,7 @@
       },
       {
         "command": "getx-light-bulb.getXCreateFile",
-        "title": "BaseX: Create New Page",
+        "title": "★ BaseX: Create New Page",
         "category": "BaseX"
       }
     ],
@@ -77,6 +77,18 @@
         {
           "command": "getx-light-bulb.wrapObx",
           "when": "editorLangId == dart"
+        },
+        {
+          "command": "getx-light-bulb.removeObx",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "getx-light-bulb.expanded",
+          "when": "editorLangId == dart"
+        },
+        {
+          "when": "false",
+          "command": "getx-light-bulb.getXCreateFile"
         }
       ]
     }

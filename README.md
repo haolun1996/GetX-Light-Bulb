@@ -1,4 +1,10 @@
 # GetX Light Bulb
+![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/HyLun.getx-light-bulb?style=for-the-badge&logo=visual-studio-code&color=blue)&emsp; 
+![Maintenance](https://img.shields.io/maintenance/yes/2023?logo=github&style=for-the-badge&color=bf9b30&labelColor=black)
+<br />
+
+***
+<br />
 
 A vscode extension for [Get](https://pub.dev/packages/get) to make your development more efficient and faster!!!
 <br />
