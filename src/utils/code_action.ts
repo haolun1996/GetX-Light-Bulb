@@ -23,6 +23,11 @@ export class LighBulbProvider implements CodeActionProvider {
         });
 
         codeActions.push({
+            command: "getx-light-bulb.stack",
+            title: "Stack"
+        });
+
+        codeActions.push({
             command: "getx-light-bulb.wrapObx",
             title: "Wrap with Obx"
         });
@@ -31,6 +36,8 @@ export class LighBulbProvider implements CodeActionProvider {
             command: "getx-light-bulb.removeObx",
             title: "Remove this Obx"
         });
+
+
 
         return codeActions;
     }

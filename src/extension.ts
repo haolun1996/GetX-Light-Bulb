@@ -1,7 +1,7 @@
 import { languages, commands, window, ExtensionContext } from 'vscode';
 import { LighBulbProvider } from './utils/code_action';
 import { wrapWithObx, removeThisObx, getXCreateFile } from './commands/getx';
-import { expanded } from './commands/flutter';
+import { expanded, stack } from './commands/flutter';
 
 export function activate(context: ExtensionContext) {
 	// window.showInformationMessage('Hello World from GetX Light Bulb!');
@@ -25,10 +25,16 @@ export function activate(context: ExtensionContext) {
 		window.setStatusBarMessage("Expanded", 2000);
 	});
 
+	let stacked = commands.registerCommand('getx-light-bulb.stack', () => {
+		stack();
+		window.setStatusBarMessage("Stack", 2000);
+	});
+
 	let getXCr8File = commands.registerCommand("getx-light-bulb.getXCreateFile", getXCreateFile);
 
 	context.subscriptions.push(lightBulb);
 	context.subscriptions.push(expand);
+	context.subscriptions.push(stacked);
 	context.subscriptions.push(wrapObx);
 	context.subscriptions.push(removeObx);
 	context.subscriptions.push(getXCr8File);
