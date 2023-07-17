@@ -54,8 +54,18 @@
         "category": "BaseX"
       },
       {
+        "command": "getx-light-bulb.stack",
+        "title": "Stack",
+        "category": "BaseX"
+      },
+      {
         "command": "getx-light-bulb.getXCreateFile",
         "title": "★ BaseX: Create New Page",
+        "category": "BaseX"
+      },
+      {
+        "command": "getx-light-bulb.json2dart",
+        "title": "★ Convert json to dart",
         "category": "BaseX"
       }
     ],
@@ -87,8 +97,16 @@
           "when": "editorLangId == dart"
         },
         {
-          "when": "false",
-          "command": "getx-light-bulb.getXCreateFile"
+          "command": "getx-light-bulb.stack",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "getx-light-bulb.getXCreateFile",
+          "when": "false"
+        },
+        {
+          "command": "getx-light-bulb.json2dart",
+          "when": "editorLangId == json"
         }
       ]
     }

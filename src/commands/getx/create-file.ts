@@ -1,8 +1,9 @@
-import { window, Uri, workspace, ProgressLocation } from "vscode";
+import { window, Uri, workspace } from "vscode";
 import { mkdirp } from "mkdirp";
-import { writeFileSync, readFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { createFile } from "../create_file";
 import { showErrorMessageWithTimeout } from "../../utils/show_prompt";
+import { getPackageName } from "../../utils/get_package_name";
 const { snakeCase, camelCase, upperFirst } = require('lodash');
 
 export async function getXCreateFile(uri: Uri) {
@@ -93,14 +94,4 @@ function promptForFeatureName(prompt: string) {
         placeHolder: "Folder OR File Name"
     };
     return window.showInputBox(FeatureNamePromptOptions);
-}
-
-async function getPackageName() {
-    let pubspecFile = await workspace.findFiles('pubspec.yaml');
-    let pubspecPath = pubspecFile[0].path;
-
-    var data = readFileSync(pubspecPath, 'utf-8')
-    var nameLine = data.split('\n')[0].replace("name: ", "");
-
-    return nameLine;
 }

@@ -21,29 +21,29 @@ export function removeThisObx() {
     }
 
     if (replacedText.substring(replacedText.length - 4, replacedText.length).includes('),),') && !content.includes(';')) {
-        console.log('1');
+        // console.log('1');
         replacedText = replacedText.slice(0, -2);
-        console.log(replacedText);
+        // console.log(replacedText);
     } else if (content.substring(content.length - 3).includes(')),') && !content.includes(';')) {
-        console.log('2');
+        // console.log('2');
         replacedText = replacedText.replace(')),', '),');
-        console.log(replacedText);
+        // console.log(replacedText);
     } else if (replacedText.substring(replacedText.length - 4, replacedText.length).includes('),);') && content.includes(';') && !content.includes('return')) {
-        console.log('3');
+        // console.log('3');
         replacedText = replacedText.replace(',);', ';');
-        console.log(replacedText);
+        // console.log(replacedText);
     } else if (replacedText.substring(replacedText.length - 3, replacedText.length).includes('));') && content.includes(';') && !content.includes('return')) {
-        console.log('4');
+        // console.log('4');
         replacedText = replacedText.replace(',));', ');');
-        console.log(replacedText);
+        // console.log(replacedText);
     } else if (replacedText.substring(replacedText.length - 4, replacedText.length).includes('),);') && content.includes(';') && content.includes('return')) {
-        console.log('5');
+        // console.log('5');
         replacedText = `return ${replacedText.replace(',);', ';')}`;
-        console.log(replacedText);
+        // console.log(replacedText);
     } else if (replacedText.substring(replacedText.length - 3, replacedText.length).includes('));') && content.includes(';') && content.includes('return')) {
-        console.log('6');
+        // console.log('6');
         replacedText = `return ${replacedText.replace(',));', ');')}`;
-        console.log(replacedText);
+        // console.log(replacedText);
     }
 
     editor.insertSnippet(new SnippetString(`${replacedText}`));
