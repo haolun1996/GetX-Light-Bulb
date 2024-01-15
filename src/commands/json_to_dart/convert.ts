@@ -18,7 +18,7 @@ export default function generate(path: string, rootClass: string, jsonObj: any) 
     }
 }
 
-async function objToDart(path: string, jsonObj: any, className: string, isMainClass: boolean = false) {
+async function objToDart(path: string, jsonObj: any, className: string, isMainClass: boolean = false) : Promise<any>{
     if (Array.isArray(jsonObj)) {
         return objToDart(path, jsonObj[0], className);
     }

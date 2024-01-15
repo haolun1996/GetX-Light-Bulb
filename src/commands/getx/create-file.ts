@@ -1,6 +1,6 @@
 import { window, Uri, workspace } from "vscode";
 import { mkdirp } from "mkdirp";
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { createFile } from "../create_file";
 import { showErrorMessageWithTimeout } from "../../utils/show_prompt";
 import { getPackageName } from "../../utils/get_package_name";
@@ -86,8 +86,52 @@ ${intent2}super.onClose();
 ${intent}}
 }`, 'utf8');
 
+        await setAppPage(pageNameFile, bindingNameFile);
+        await setAppRoute(`import 'package:${packageName}/${snake}/${snake}_page.dart';`, `import 'package:${packageName}/${snake}/${snake}_bindings.dart';`);
+
         window.showInformationMessage('BaseX page created');
     }
+}
+
+async function setAppRoute(importPage: string, importBinding: string): Promise<void> {
+    let pubspecFile = await workspace.findFiles('**/app_routes.dart');
+    let pubspecPath: string = pubspecFile[0].path;
+    let data: string = readFileSync(pubspecPath, 'utf-8');
+    let lineList: string[] = data.split('\n');
+
+    let rewriteLines: string[] = [];
+
+    for (let i = 0; i < lineList.length; i++){
+        if(lineList[i].includes(`part 'app_pages.dart';`)){
+            rewriteLines.splice(i -1);
+            rewriteLines.push(importPage);
+            rewriteLines.push(`${importBinding}\n`);
+        }
+        rewriteLines.push(`${lineList[i]}`);
+    }
+
+    writeFileSync(pubspecPath, rewriteLines.join('\n'), 'utf8');
+}
+
+async function setAppPage(pageName: string, bindingName: string): Promise<void> {
+    let pubspecFile = await workspace.findFiles('**/app_pages.dart');
+    let pubspecPath: string = pubspecFile[0].path;
+    let data: string = readFileSync(pubspecPath, 'utf-8');
+    let lineList: string[] = data.split('\n');
+
+    let rewriteLines: string[] = [];
+    let first: boolean = true;
+
+    for (let i = 0; i < lineList.length; i++){
+        if(lineList[i].includes('];') && first){
+            first = false;
+            rewriteLines.push(`\n${intent}${intent}// ${pageName.replace('page','')}`);
+            rewriteLines.push(`${intent}${intent}cGetPage(${pageName}(), binding: ${bindingName}()),`);
+        }
+        rewriteLines.push(`${lineList[i]}`);
+    }
+
+    writeFileSync(pubspecPath, rewriteLines.join('\n'), 'utf8');
 }
 
 function promptForFeatureName(prompt: string) {

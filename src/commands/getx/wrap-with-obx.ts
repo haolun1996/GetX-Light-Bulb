@@ -3,7 +3,9 @@ import { window, commands, SnippetString } from "vscode";
 export function wrapWithObx() {
 
     let editor = window.activeTextEditor;
-    if (!editor) return;
+    if (!editor){ 
+        return;
+    }
 
     var content = editor.document.getText(editor.selection);
 
