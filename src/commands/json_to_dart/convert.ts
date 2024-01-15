@@ -3,7 +3,6 @@ import { getPackageName } from '../../utils/get_package_name';
 import saveAsFile from './file_saver';
 import { intent, intent2, intent3 } from '../../utils/intent_dart';
 
-
 let importSubClass: string[] = [];
 
 export default function generate(path: string, rootClass: string, jsonObj: any) {

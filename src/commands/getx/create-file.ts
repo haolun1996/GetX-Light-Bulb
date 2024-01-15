@@ -5,6 +5,7 @@ import { createFile } from "../create_file";
 import { showErrorMessageWithTimeout } from "../../utils/show_prompt";
 import { getPackageName } from "../../utils/get_package_name";
 const { snakeCase, camelCase, upperFirst } = require('lodash');
+import { intent, intent2, intent3 } from '../../utils/intent_dart';
 
 export async function getXCreateFile(uri: Uri) {
     if (!uri.fsPath.includes('ui')) {
@@ -36,52 +37,53 @@ export async function getXCreateFile(uri: Uri) {
         writeFileSync(page,
             `import 'package:flutter/material.dart';
 
-import 'package:baseX/Core/x_base_widget.dart';
+import 'package:baseX/base_x.dart';
 
 import 'package:${packageName}/${snake}/${snake}_controller.dart';
 
 class ${pageNameFile} extends BaseXWidget<${controllerNameFile}> {
+${intent}@override
+${intent}String get routeName => '/${snake}';
 
-    @override
-    String get routeName => '/${snake}';
+${intent}@override
+${intent}Widget? appBar(BuildContext context) => null;
 
-    @override
-    Widget? appBar(BuildContext context) => null;
-
-    @override
-    Widget body(BuildContext context) {
-        return Column(children: []);
-    }
-            
+${intent}@override
+${intent}Widget body(BuildContext context) {
+${intent2}return Column(children: []);
+${intent}}  
 }`, 'utf8');
 
         writeFileSync(bindings,
-            `import 'package:get/get.dart';
+            `import 'package:baseX/base_x.dart';
+
 import 'package:${packageName}/${snake}/${snake}_controller.dart';
 
 class ${bindingNameFile} implements Bindings {
-    @override
-    void dependencies() {
-        Get.put(${controllerNameFile}());
-    }
+${intent}@override
+${intent}void dependencies() {
+${intent2}Get.put(${controllerNameFile}());
+${intent}}
 }`, 'utf8');
 
         writeFileSync(controller,
-            `import 'package:baseX/Core/x_base_controller.dart';
+            `import 'package:baseX/base_x.dart';
 
 class ${controllerNameFile} extends BaseXController { 
+${intent}@override
+${intent}void onInit() async {
+${intent2}// TODO: implement onInit
+${intent2}super.onInit();
+${intent2}await initData();
+${intent}}
 
-    @override
-    void onInit() {
-        // TODO: implement onInit
-        super.onInit();
-    }
+${intent}Future<void> initData() async {}
 
-    @override
-    void onClose() {
-        // TODO: implement onClose
-        super.onClose();
-    }
+${intent}@override
+${intent}void onClose() {
+${intent2}// TODO: implement onClose
+${intent2}super.onClose();
+${intent}}
 }`, 'utf8');
 
         window.showInformationMessage('BaseX page created');
@@ -89,9 +91,9 @@ class ${controllerNameFile} extends BaseXController {
 }
 
 function promptForFeatureName(prompt: string) {
-    const FeatureNamePromptOptions = {
+    const featureNamePromptOptions = {
         prompt: prompt,
         placeHolder: "Folder OR File Name"
     };
-    return window.showInputBox(FeatureNamePromptOptions);
+    return window.showInputBox(featureNamePromptOptions);
 }
