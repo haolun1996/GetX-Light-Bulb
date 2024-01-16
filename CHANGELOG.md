@@ -1,5 +1,13 @@
 # Change Log
 
+## [v0.3.4](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.4) - 2023-06-06
+- add 
+  - enhance getXCreateFile to be auto import path for app_pages.dart and app_routes.dart
+  - added wrap with stack
+
+- EXTRA
+  - change version and maintained logo to year 2024 on readme
+
 ## [v0.3.3](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.3.3) - 2023-06-06
 - add 
   - icon to getXCreateFile
