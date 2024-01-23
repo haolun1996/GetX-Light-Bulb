@@ -1,7 +1,8 @@
 const { camelCase, upperFirst, snakeCase } = require('lodash');
 import { getPackageName } from '../../utils/get_package_name';
 import saveAsFile from './file_saver';
-import { intent, intent2, intent3 } from '../../utils/intent_dart';
+import { intent, intent2, intent3, intent4 } from '../../utils/intent_dart';
+import { DARTTYPES } from './dart_types';
 
 let importSubClass: string[] = [];
 
@@ -18,22 +19,21 @@ export default function generate(path: string, rootClass: string, jsonObj: any) 
     }
 }
 
-async function objToDart(path: string, jsonObj: any, className: string, isMainClass: boolean = false) : Promise<any>{
+async function objToDart(path: string, jsonObj: any, className: string, isMainClass: boolean = false, arryItem: any[] = []) : Promise<any>{
+    // check if array then analyze inside again
     if (Array.isArray(jsonObj)) {
-        return objToDart(path, jsonObj[0], className);
+        return objToDart(path, jsonObj[0], className, false, jsonObj);
     }
 
-    let lines: string[] = [];
-    let propsLines: string[] = [];
-    let constructorLines: string[] = [];
-    let fromJsonLines: string[] = [];
-    let listFronJsonLines: string[] = [];
-    let toJsonLines: string[] = [];
+    let lines: string[] = [], propsLines: string[] = [], constructorLines: string[] = [],
+        fromJsonLines: string[] = [], listFronJsonLines: string[] = [],
+        toJsonLines: string[] = [], copyWithConsLines: string[] = [],
+        copyWithReturnLines: string[] = [], copyWithLines: string[] = [];
 
-    // Start of class model
+    // import
     lines.push(`import 'package:baseX/base_x.dart';\n`);
 
-    // lines.push(await getPackageName());
+    // Start of class model
     lines.push(`class ${className} extends XData {`);
 
     // Start of constructor
@@ -60,6 +60,14 @@ async function objToDart(path: string, jsonObj: any, className: string, isMainCl
     toJsonLines.push(`${intent}@override\n`);
     toJsonLines.push(`${intent}JSON toJson() => {\n`);
 
+    // Start of copyWith
+    copyWithConsLines.push('\n');
+    copyWithConsLines.push(`${intent}@override\n`);
+    copyWithConsLines.push(`${intent}${className} copyWith({\n`);
+
+    copyWithReturnLines.push(`${intent}}) =>\n`);
+    copyWithReturnLines.push(`${intent3}${className}(\n`);
+
     for (let key in jsonObj) {
 
         let element = jsonObj[key];
@@ -73,13 +81,14 @@ async function objToDart(path: string, jsonObj: any, className: string, isMainCl
         if (element === null) {
             element = '';
         }
+
         if (typeof element === 'object') {
             let subClassName: string = buildClassName(key);
 
             if (Array.isArray(element)) {
                 let { inner, genericString } = getInnerObjInfo(
                     element,
-                    subClassName
+                    subClassName,
                 );
 
                 let { fromJsonLinesJoined, toJsonJoined } = getIterateLines(
@@ -92,6 +101,8 @@ async function objToDart(path: string, jsonObj: any, className: string, isMainCl
                 propsLines.push(`${intent}final ${genericString}? ${legalKey};\n`);
                 fromJsonLines.push(fromJsonLinesJoined);
                 toJsonLines.push(toJsonJoined);
+                copyWithConsLines.push(`${intent2}${genericString}? ${legalKey},\n`);
+                copyWithReturnLines.push(`${intent4}${legalKey}: ${legalKey} ?? this.${legalKey},\n`);
 
                 if (typeof inner === 'object') {
                     objToDart(path, element, subClassName);
@@ -111,29 +122,29 @@ async function objToDart(path: string, jsonObj: any, className: string, isMainCl
             }
         } else {
             let toType: string = `json[${jsonKey}]`;
-            let type: string = '';
-            if (typeof element === 'boolean') {
-                //bool is special
-                type = 'bool';
-            } else {
-                if (typeof element === 'string') {
-                    toType = `json[${jsonKey}]`;
-                    type = 'String';
-                } else if (typeof element === 'number') {
-                    if (Number.isInteger(element)) {
-                        toType = `json[${jsonKey}]`;
-                        type = 'int';
-                    } else {
-                        toType = `json[${jsonKey}]`;
-                        type = 'double';
-                    }
-                }
+            let type: string = DARTTYPES.dynamic;
+
+            const declareType =  typeof element;
+
+            if (declareType === 'boolean') {
+                type = DARTTYPES.bool;
+            } else if(declareType === 'number'){
+                type = `${element}`.includes('.') ? DARTTYPES.double : DARTTYPES.int;
+            } else if (declareType === 'string'){
+                type = DARTTYPES.string;
             }
+            
             propsLines.push(`${intent}final ${type}? ${legalKey};\n`);
             fromJsonLines.push(`${intent3}${legalKey}: ${toType},\n`);
             toJsonLines.push(`${intent2}${jsonKey}: ${legalKey},\n`);
+
+            copyWithConsLines.push(`${intent2}${type}? ${legalKey},\n`);
+            copyWithReturnLines.push(`${intent4}${legalKey}: ${legalKey} ?? this.${legalKey},\n`);
         }
     }
+
+    // End of copyWithReturnLines
+    copyWithReturnLines.push(`${intent3});`);
 
     // End of constructor
     constructorLines.push(`${intent}});`);
@@ -145,12 +156,18 @@ async function objToDart(path: string, jsonObj: any, className: string, isMainCl
     // End of toJson
     toJsonLines.push(`${intent}};`);
 
-    // Body : props -> constructor -> fromJson -> toJson
+    // End of copyWith
+    // combine copyWithConsLines and copyWithReturnLines
+    copyWithLines.push(copyWithConsLines.join(''));
+    copyWithLines.push(copyWithReturnLines.join(''));
+
+    // Body : props -> constructor -> fromJson -> toJson -> copyWith
     lines.push(propsLines.join(''));
     lines.push(constructorLines.join(''));
     lines.push(fromJsonLines.join(''));
     lines.push(listFronJsonLines.join(''));
     lines.push(toJsonLines.join(''));
+    lines.push(copyWithLines.join(''));
 
     // End of class model
     lines.push(`}\n`);
@@ -158,11 +175,14 @@ async function objToDart(path: string, jsonObj: any, className: string, isMainCl
     // Import related 
     if (isMainClass) {
         for (var importName of importSubClass) {
-            lines.splice(1, 0, `import 'package:${await getPackageName()}/app/model/generated/${importName}.dart';\n`);
+            lines.splice(1, 0, `import 'package:${await getPackageName()}/model/generated/${importName}.dart';`);
+        }
+        if(importSubClass.length > 0){
+            lines.splice(importSubClass.length + 1, 0 , '');
         }
     }
 
-    saveAsFile(`${path.replace('json', 'model')}generated/${snakeCase(className)}.dart`, lines.join('\n'));
+    saveAsFile(`${path.replace('json', '')}generated/${snakeCase(className)}.dart`, lines.join('\n'));
 }
 
 // Checking dart reserved key word
@@ -248,6 +268,29 @@ function dartKeywordDefence(key: string): string | undefined {
 // remove duplicate element
 function removeSurplusElement(obj: any) {
     if (Array.isArray(obj)) {
+        // check array [0] is object
+        if(typeof obj[0] === 'object'){
+            let tempArr;
+            for (let element of obj) {
+                let temp = Object.keys(element).filter(key => typeof element[key] === 'number' && `${element[key]}`.includes('.'));
+                if(temp.length > 0){
+                    tempArr = element;
+                    break;
+                }
+            };
+            
+            if(tempArr !== null){
+                obj.splice(0, 0, tempArr);
+            }
+        }else{
+            // check if array contain double then follow by double
+            let tempArr = obj.filter(x => typeof x === 'number' && `${x}`.includes('.'));
+            
+            if(tempArr.length > 0){
+                obj.splice(0, 0, obj.filter(x => typeof x === 'number' && `${x}`.includes('.'))[0]);
+            }
+        }
+
         obj.length = 1;
         removeSurplusElement(obj[0]);
     } else if (typeof obj === 'object') {
@@ -272,7 +315,7 @@ function getIterateLines(arr: any[], className: string, legalKey: string, jsonKe
         legalKey = 'this.data';
     }
 
-    let { inner, genericString, isDefaultType } = getInnerObjInfo(arr, className,);
+    let { inner, genericString, isDefaultType } = getInnerObjInfo(arr, className);
     if (inner === undefined || inner === null) {
         throw (`the property named &nbsp <b>${jsonKey}</b> &nbsp is an EMPTY array ! parse process is failed !`);
     }
@@ -305,7 +348,7 @@ function getIterateLines(arr: any[], className: string, legalKey: string, jsonKe
 }
 
 function getInnerObjInfo(arr: any, className: string): { inner: any[], genericString: string, isDefaultType: boolean } {
-    let { inner, count } = getInnerObj(arr);
+    let { inner, count } = getInnerObj(arr, 0);
 
     let innerClass: string = className;
     let isDefaultType: boolean = false;
@@ -314,23 +357,20 @@ function getInnerObjInfo(arr: any, className: string): { inner: any[], genericSt
         importSubClass.push(snakeCase(className));
     }
 
-    if (typeof inner === 'boolean') {
-        //we don't handle boolean
-        innerClass = 'bool';
+    const declareType = typeof inner;
+
+    if (declareType === 'boolean') {
+        innerClass = DARTTYPES.bool;
         isDefaultType = true;
         importSubClass.pop();
     } else {
-        if (typeof inner === 'string') {
-            innerClass = 'String';
+        if (declareType === 'string') {
+            innerClass = DARTTYPES.string;
             isDefaultType = true;
             importSubClass.pop();
         }
-        if (typeof inner === 'number') {
-            if (Number.isInteger(inner)) {
-                innerClass = 'int';
-            } else {
-                innerClass = 'double';
-            }
+        if (declareType === 'number') {
+            innerClass = `${inner}`.includes('.') ? DARTTYPES.double : DARTTYPES.int;
             isDefaultType = true;
             importSubClass.pop();
         }
@@ -353,27 +393,9 @@ function getInnerObj(arr: any, count: number = 0): { inner: any[], count: number
     if (Array.isArray(arr)) {
         let first = arr[0];
         count++;
+
         return getInnerObj(first, count);
     } else {
         return { inner: arr, count };
     }
 }
-
-// Temperatures copyWith({
-//     String? name,
-//     String? age,
-//     bool? isAdmin,
-//     List<String>? orderIds,
-//     dynamic orderItem,
-//     List<OrderStack>? orderStack,
-//     Permission? permission,
-// }) => 
-//     Temperatures(
-//         name: name ?? this.name,
-//         age: age ?? this.age,
-//         isAdmin: isAdmin ?? this.isAdmin,
-//         orderIds: orderIds ?? this.orderIds,
-//         orderItem: orderItem ?? this.orderItem,
-//         orderStack: orderStack ?? this.orderStack,
-//         permission: permission ?? this.permission,
-    // );

@@ -1,6 +1,7 @@
 import { workspace, Uri, window } from 'vscode';
 import { existsSync, readFileSync } from "fs";
 import json2dart from './convert';
+import { showErrorMessageWithTimeout } from '../../utils/show_prompt';
 
 const compiledJson: Set<string> = new Set();
 
@@ -18,23 +19,22 @@ function deleteGFile(uri: Uri) {
 
 function generateByUri(uri: Uri) {
     const content = readFileSync(uri.fsPath, { encoding: 'utf-8' });
-    if (content) generate(uri.fsPath, content, uri);
+    if (content) {
+        generate(uri.fsPath, content, uri);
+    }
 }
-
-// function generateByDocument(document: TextDocument) {
-//     generate(document.fileName, document.getText());
-// }
 
 export function generateAll() {
-    workspace.findFiles('**/*.d.json').then((uris) => {
-        uris.forEach(generateByUri);
-    });
-    workspace.findFiles('**/*.dart.json').then((uris) => {
-        uris.forEach(generateByUri);
+    workspace.findFiles('**/model/json/*.d.json', '**/model/json/*.dart.json').then((uris) => {
+        if(uris.length === 0){
+            return showErrorMessageWithTimeout('Please create inside model/json/ folder.', 4);
+        }else{
+            uris.forEach(generateByUri);
+        }
     });
 }
 
-function generate(filePath: string, content: string, uri: Uri) {
+function generate(filePath: string, content: string, uri: Uri) : void{
     if (filePath.includes('.d.json') || filePath.includes('.dart.json')) {
         const fileName = filePath.split(/[\\\/]/).pop()!;
         const path = filePath.split(`${fileName}`)[0];
