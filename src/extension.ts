@@ -1,8 +1,9 @@
-import { languages, commands, window, ExtensionContext } from 'vscode';
-import { LighBulbProvider } from './utils/code_action';
-import { wrapWithObx, removeThisObx, getXCreateFile } from './commands/getx';
+import { commands, ExtensionContext, languages, window } from 'vscode';
+import { baseXCreateProject } from './commands/base_x_project/create-in-path';
 import { expanded, stack } from './commands/flutter';
+import { getXCreateFile, removeThisObx, wrapWithObx } from './commands/getx';
 import { generateAll } from './commands/json_to_dart/json_to_dart';
+import { LighBulbProvider } from './utils/code_action';
 
 export function activate(context: ExtensionContext) {
 	// window.showInformationMessage('Hello World from GetX Light Bulb!');
@@ -39,6 +40,10 @@ export function activate(context: ExtensionContext) {
 		window.setStatusBarMessage("Json to Dart", 2000);
 	});
 
+	let generateBaseXProject = commands.registerCommand("getx-light-bulb.baseXCreateProject", () => {
+		baseXCreateProject(context);
+	});
+
 	context.subscriptions.push(lightBulb);
 	context.subscriptions.push(expand);
 	context.subscriptions.push(stacked);
@@ -46,6 +51,7 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(removeObx);
 	context.subscriptions.push(getXCr8File);
 	context.subscriptions.push(jsonToDart);
+	context.subscriptions.push(generateBaseXProject);
 
 	// function bind(fileWatcher: vscode.FileSystemWatcher) {
 	//     fileWatcher.onDidChange((uri) => {

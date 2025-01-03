@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Replace below without '{ }' -->
+    <string name="app_name">{{${titleCase}}}</string>
+    <string name="facebook_app_id">{facebookAppId}</string>
+    <string name="fb_login_protocol_scheme">fb{facebookAppId}</string>
+    <string name="facebook_client_token">{facebookClientToken}</string>
+</resources>

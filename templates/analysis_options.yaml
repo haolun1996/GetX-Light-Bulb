@@ -1,0 +1,3 @@
+include: package:baseX/x_lint/x_lint.yaml
+
+# Need to add extra lint please make a PR to baseX
