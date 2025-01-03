@@ -1,5 +1,14 @@
 # Change Log
 
+## [v0.5.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.5.0) - 2025-01-03
+- new 
+  - Create New Flutter Project Template with BaseX
+
+<br />
+
+***
+<br />
+
 ## [v0.4.0](https://github.com/haolun1996/GetX-Light-Bulb/releases/tag/0.4.0) - 2024-01-23
 - new 
   - convert json to dart model based on json file

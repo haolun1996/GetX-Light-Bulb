@@ -1,6 +1,6 @@
 # GetX Light Bulb
 ![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/HyLun.getx-light-bulb?style=for-the-badge&logo=visual-studio-code&color=blue)&emsp; 
-![Maintenance](https://img.shields.io/maintenance/yes/2024?logo=github&style=for-the-badge&color=bf9b30&labelColor=black)
+![Maintenance](https://img.shields.io/maintenance/yes/2025?logo=github&style=for-the-badge&color=bf9b30&labelColor=black)
 <br />
 
 ***
@@ -33,6 +33,8 @@ __** Wrap or remove Obx function need to highlight on a completed widget **__
 
 ### Create BaseX page with binding and controller
 ![demo](https://raw.githubusercontent.com/haolun1996/GetX-Light-Bulb/main/example/gif/create-base-x-page.gif)
+
+### Create New Flutter Project Template with BaseX using `⌘ + ⇧ Shift + P` (Mac)
 
 <br />
 
